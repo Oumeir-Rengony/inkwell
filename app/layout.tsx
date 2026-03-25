@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { ConvexClientProvider } from "@/components/convex/convex-client-provider";
+import { ClerkProvider, useAuth } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -24,10 +26,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Lato:wght@300;400;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
+          <ConvexClientProvider>
+            {children}
+          </ConvexClientProvider>
+        </ClerkProvider>  
       </body>
     </html>
   );

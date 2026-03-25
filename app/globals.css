@@ -1,8 +1,13 @@
 @import "tailwindcss";
+@import '../styles/_variables.scss';                                    
+@import '../styles/_keyframe-animations.scss';
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --playfair: "Playfair Display", Georgia, serif;
+  --lato: "Lato", "DM Sans", sans-serif;
 }
 
 @theme inline {
@@ -10,6 +15,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-playfair: var(--playfair);
+  --font-lato: var(--lato)
 }
 
 @media (prefers-color-scheme: dark) {
