@@ -97,7 +97,7 @@ export default function ArticlesFeed() {
                      )}
 
                      <div className="flex items-center gap-4">
-                        <span className="text-sm text-[#9AABA]">
+                        <span className="text-sm text-[#9AABA3]">
                            {formatDate(article?.updatedAt)}
                         </span>
                         <Link

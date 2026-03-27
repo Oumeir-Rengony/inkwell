@@ -1,7 +1,6 @@
 "use client"
 
-import { startTransition, use, useEffect, useRef, useState } from "react";
-import Navbar from "@/components/ui/navbar";
+import { startTransition, use, useState } from "react";
 import { cn } from "@/lib/utilities";
 import { Authenticated, useMutation, useQuery } from "convex/react";
 import { ArrowLeft, Settings } from "lucide-react";
@@ -89,7 +88,7 @@ export function Layout({
         autocorrect: "off",
         autocapitalize: "off",
         "aria-label": "Main content area, start typing to enter text.",
-        class: "simple-editor",
+        class: "prose prose-sm sm:prose-base lg:prose-lg m-5 focus:outline-none",
       },
     },
     extensions: [

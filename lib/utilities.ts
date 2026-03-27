@@ -16,3 +16,19 @@ export function parseCommaList(value: string): string[] {
     .map((item) => item.trim())
     .filter(Boolean);
 }
+
+
+export function calculateReadingTime(text: string, wordsPerMinute = 190) {
+  const wordCount = text
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
+
+  const minutes = Math.ceil(wordCount / wordsPerMinute);
+
+  return {
+    wordCount,
+    minutes,
+    label: `${minutes} min read`,
+  };
+}

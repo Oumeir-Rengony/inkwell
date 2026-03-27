@@ -1,11 +1,7 @@
 "use client"
 
 import { EditorContent, EditorContext } from "@tiptap/react"
-
-// --- Styles ---
-import "@/components/tiptap-templates/simple/simple-editor.scss"
 import { EditorToolbar } from "./toolbar";
-
 
 
 export function SimpleEditor({

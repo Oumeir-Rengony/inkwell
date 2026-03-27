@@ -135,7 +135,7 @@ export const togglePublish = mutation({
   },
 });
 
-export const getBySlug = query({
+export const getArticleBySlug = query({
    args: { slug: v.string() },
 
    handler: async (ctx: QueryCtx, { slug }) => {
