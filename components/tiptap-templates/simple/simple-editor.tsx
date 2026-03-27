@@ -15,7 +15,7 @@ export function SimpleEditor({
 }) {
 
   return (
-    <div className="">
+    <>
       <EditorContext.Provider value={{ editor }}>
 
         <EditorToolbar className="mb-5"/>
@@ -27,6 +27,6 @@ export function SimpleEditor({
         />
 
       </EditorContext.Provider>
-    </div>
+    </>
   )
 }

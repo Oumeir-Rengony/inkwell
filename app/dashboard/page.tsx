@@ -33,10 +33,13 @@ export default function DashboardPage() {
   const deleteArticle = useMutation(api.articles.remove);
   const togglePublish = useMutation(api.articles.togglePublish);
 
-  async function handlePublishToggle(articleId: Id<"articles">) {
+  async function handlePublishToggle(articleId: Id<"articles">, content: string) {
     try {
       setActionLoading(articleId);
-      await togglePublish({ articleId });
+      await togglePublish({
+        articleId,
+        content
+      });
 
     } catch (err) {
       console.error(err);
@@ -70,9 +73,9 @@ export default function DashboardPage() {
   }
 
   const filtered = articles?.filter((a) => {
-      if (filter === "all") return true;
-      return a.status === filter;
-    }) ?? [];
+    if (filter === "all") return true;
+    return a.status === filter;
+  }) ?? [];
 
   const counts = {
     all: articles?.length ?? 0,
@@ -91,72 +94,69 @@ export default function DashboardPage() {
   const isLoading = articles === undefined;
 
   return (
-    <div className="bg-[#FDFAF4] min-h-screen">
-      <Navbar />
+    <div>
 
-      <div className="max-w-275 mx-auto pt-20 pb-16 px-5">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-10 gap-4 flex-wrap">
-          <div>
-            <h1 className="font-playfair text-2xl sm:text-3xl font-extrabold text-[#0A1714] mb-2">
-              Your Articles
-            </h1>
-            <p className="text-[#5C706A] text-sm">
-              {counts.all} article{counts.all !== 1 ? "s" : ""} total
-            </p>
-          </div>
-
-          <Link
-            href="#"
-            onClick={handleCreate}
-            className="inline-flex items-center gap-2 bg-[#1E3530] text-[#FAF5E8] px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap"
-          >
-            <Plus size={15} /> New Article
-          </Link>
+      {/* Header */}
+      <div className="flex items-start justify-between mb-10 gap-4 flex-wrap">
+        <div>
+          <h1 className="font-playfair text-2xl sm:text-3xl font-extrabold text-[#0A1714] mb-2">
+            Your Articles
+          </h1>
+          <p className="text-[#5C706A] text-sm">
+            {counts.all} article{counts.all !== 1 ? "s" : ""} total
+          </p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-0 mb-6 border-b border-[#E8EDE9]">
-          {tabs.map((f) => {
-            const isActive = filter === f;
-
-            return (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={cn(
-                  "px-4 py-2 text-sm transition-all capitalize cursor-pointer",
-                  isActive
-                    ? "font-semibold text-[#1E3530] border-b-2 border-[#1E3530]"
-                    : "font-normal text-[#5C706A] border-b-2 border-transparent"
-                )}
-              >
-                {f}
-                <span className="text-[0.75rem] text-[#9AABA3] font-normal ml-1">
-                  {counts[f]}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Content */}
-        {isLoading ? (
-          <div className="text-center p-16 text-[#9AABA3] italic">
-            Loading articles…
-          </div>
-        ) : (
-          <ListArticles 
-            filtered={filtered}
-            handlePublishToggle={handlePublishToggle}
-            handleDelete={handleDelete}
-            handleCreate={handleCreate}
-            actionLoading={actionLoading}
-            filter={filter}
-            formatDate={formatDate}
-          />
-        )}
+        <Link
+          href="#"
+          onClick={handleCreate}
+          className="inline-flex items-center gap-2 bg-[#1E3530] text-[#FAF5E8] px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap"
+        >
+          <Plus size={15} /> New Article
+        </Link>
       </div>
+
+      {/* Tabs */}
+      <div className="flex gap-0 mb-6 border-b border-[#E8EDE9]">
+        {tabs.map((f) => {
+          const isActive = filter === f;
+
+          return (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={cn(
+                "px-4 py-2 text-sm transition-all capitalize cursor-pointer",
+                isActive
+                  ? "font-semibold text-[#1E3530] border-b-2 border-[#1E3530]"
+                  : "font-normal text-[#5C706A] border-b-2 border-transparent"
+              )}
+            >
+              {f}
+              <span className="text-[0.75rem] text-[#9AABA3] font-normal ml-1">
+                {counts[f]}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Content */}
+      {isLoading ? (
+        <div className="text-center p-16 text-[#9AABA3] italic">
+          Loading articles…
+        </div>
+      ) : (
+        <ListArticles
+          filtered={filtered}
+          handlePublishToggle={handlePublishToggle}
+          handleDelete={handleDelete}
+          handleCreate={handleCreate}
+          actionLoading={actionLoading}
+          filter={filter}
+          formatDate={formatDate}
+        />
+      )}
     </div>
   );
 }
@@ -170,8 +170,8 @@ function ListArticles({
   filter,
   formatDate
 }: {
-  filtered: any[];  
-  handlePublishToggle: (articleId: Id<"articles">) => void;
+  filtered: any[];
+  handlePublishToggle: (articleId: Id<"articles">, content: string) => void;
   handleDelete: (articleId: Id<"articles">) => void;
   handleCreate?: (e: React.MouseEvent) => void;
   actionLoading: string | null;
@@ -183,12 +183,12 @@ function ListArticles({
   const router = useRouter();
 
   function handleEdit(id: string) {
-    router.push(`/editor/${id}`)     
+    router.push(`/editor/${id}`)
   }
 
   if (!hasArticles) {
     return (
-      <EmptyArticles filter={filter} handleCreate={handleCreate}/>
+      <EmptyArticles filter={filter} handleCreate={handleCreate} />
     );
   }
 
@@ -200,7 +200,7 @@ function ListArticles({
           article={article}
           actionLoading={actionLoading === article._id}
           onEdit={() => handleEdit(article._id)}
-          onPublishToggle={() => handlePublishToggle(article._id)}
+          onPublishToggle={() => handlePublishToggle(article._id, article.content)}
           onDelete={() => handleDelete(article._id)}
           formatDate={formatDate}
         />
@@ -209,12 +209,12 @@ function ListArticles({
   );
 }
 
-function EmptyArticles({ 
-  filter, 
-  handleCreate 
-}: { 
-  filter: Filter; 
-  handleCreate?: (e: React.MouseEvent) => void 
+function EmptyArticles({
+  filter,
+  handleCreate
+}: {
+  filter: Filter;
+  handleCreate?: (e: React.MouseEvent) => void
 }) {
   const emptyTitle = filter === "all" ? "No articles yet" : `No ${filter} articles`;
 
@@ -262,14 +262,14 @@ function ArticleRow({
   onDelete: () => void;
   formatDate: (d: string) => string;
 }) {
-  const isPublished = article.status === "published";
+  const isPublished = article?.status === "published";
 
   const statusColor = isPublished ? "bg-[#4A7A56]" : "bg-[#C4884A]";
   const badgeStyle = isPublished
     ? "bg-[#E8EDE9] text-[#336040]"
     : "bg-[#F5EACF] text-[#92672A]";
   const badgeText = isPublished ? "Published" : "Draft";
-  const titleColor = article.title
+  const titleColor = article?.title
     ? "text-[#0A1714]"
     : "text-[#9AABA3]";
 
@@ -294,13 +294,13 @@ function ArticleRow({
             titleColor
           )}
         >
-          {article.title || "Untitled"}
+          {article?.title || "Untitled"}
         </p>
 
         <div className="flex gap-1 shrink-0">
-          <ActionButton 
-            onClick={onEdit} 
-            title="Edit" 
+          <ActionButton
+            onClick={onEdit}
+            title="Edit"
             disabled={actionLoading}
           >
             <Edit3 size={13} />
@@ -310,18 +310,18 @@ function ArticleRow({
             onClick={onPublishToggle}
             title={isPublished ? "Unpublish" : "Publish"}
             disabled={actionLoading}
-            
+
           >
             {isPublished ? (
               <GlobeOff size={13} />
             ) : (
-               <Globe size={13} />
+              <Globe size={13} />
             )}
           </ActionButton>
 
-          <ActionButton 
-            onClick={onDelete} 
-            title="Delete" 
+          <ActionButton
+            onClick={onDelete}
+            title="Delete"
             danger
             disabled={actionLoading}
           >
@@ -341,17 +341,12 @@ function ArticleRow({
         </span>
 
         <span className="text-[0.78rem] text-[#9AABA3]">
-          Updated {formatDate(article.updatedAt)}
+          Updated {formatDate(article?.updatedAt)}
         </span>
 
-        {article.tags && (
+        {Array.isArray(article?.tags) && article?.tags.length > 0 && (
           <span className="text-[0.78rem] text-[#9AABA3] max-w-40 truncate">
-            {article.tags
-              .split(",")
-              .slice(0, 2)
-              .map((t: string) => t.trim())
-              .filter(Boolean)
-              .join(", ")}
+            {article?.tags.join(", ")}
           </span>
         )}
       </div>

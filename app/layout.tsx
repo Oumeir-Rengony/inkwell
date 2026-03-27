@@ -3,6 +3,7 @@ import { ConvexClientProvider } from "@/components/convex/convex-client-provider
 import { ClerkProvider, useAuth } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Layout from "@/components/ui/layout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,7 +38,9 @@ export default function RootLayout({
       >
         <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
           <ConvexClientProvider>
-            {children}
+            <Layout>
+              {children}
+            </Layout>
           </ConvexClientProvider>
         </ClerkProvider>  
       </body>

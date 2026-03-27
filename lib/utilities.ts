@@ -9,3 +9,10 @@ import { twMerge } from "tailwind-merge";
 export const cn = (...inputs: ClassValue[]): string => {
   return twMerge(clsx(inputs));
 };
+
+export function parseCommaList(value: string): string[] {
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}

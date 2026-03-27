@@ -22,7 +22,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
   const handler = useMemo(
     () => debounce(fn, wait, options),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    dependencies
+    [fn, wait, options, ...dependencies]
   );
 
   useUnmount(() => {

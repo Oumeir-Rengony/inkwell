@@ -13,6 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   border-radius: var(--tt-radius-lg, 0.75rem);
   transition-property: background, color, opacity;
   transition-duration: var(--tt-transition-duration-default);

@@ -6,13 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { PenLine, BookOpen, LayoutDashboard, LogOut, LogIn, Menu, X, Settings } from "lucide-react";
 import { useClerk, UserButton, useUser } from "@clerk/nextjs";
 import { Authenticated, Unauthenticated, useConvexAuth } from "convex/react";
-import { cn } from "@/lib/utilities";
 
-interface User {
-   userId: string;
-   email: string;
-   name: string;
-}
 
 export default function Navbar() {
    const [menuOpen, setMenuOpen] = useState(false);
@@ -31,11 +25,11 @@ export default function Navbar() {
       signOut(() => router.push("/"));
    }
 
-   const isEditor = pathname?.startsWith("/editor") || pathname?.startsWith("/dashboard");
+   // const isEditor = pathname?.startsWith("/editor") || pathname?.startsWith("/dashboard");
 
    return (
       <header className="bg-[#FDFAF4] fixed top-0 left-0 right-0 z-50">
-         <div className="max-w-7xl my-0 mx-auto px-10">
+         <div className="max-w-7xl my-0 mx-auto px-4 md:px-10">
             <div className="flex items-center justify-between h-15">
                {/* Logo */}
                <Link className="flex items-center gap-2 no-underline" href="/">
@@ -59,11 +53,11 @@ export default function Navbar() {
                         </Link>
                   }
 
-                  {(!isEditor && isAuthenticated) && (
+                  {/* {(!isEditor && isAuthenticated) && (
                      <Link href="/editor/new" className="flex items-center gap-1.5 text-sm font-semibold text-[#FAF5E8] bg-[#1E3530] py-1.5 px-4 rounded-b-full no-underline">
                         <PenLine size={13} /> New Article
                      </Link>
-                  )}
+                  )} */}
 
                   <Authenticated>
                      <button onClick={handleLogout} className="flex items-center gap-1.5 text-sm text-[#3A524B] no-underline cursor-pointer">
@@ -86,7 +80,7 @@ export default function Navbar() {
 
          {/* Mobile drawer */}
          {menuOpen && (
-            <div className="bg-[#FDFAF4] border-t border-[#E8EDE9] py-4 px-5">
+            <div className="max-w-7xl my-0 mx-auto px-10 py-4 md:hidden bg-white border-t border-[#E8EDE9] " style={{ boxShadow: '0 2px 4px 0 rgba(0,0,0,.1)'}}>
                <div className="flex flex-col">
                   <MobileLink href="/articles">
                      <BookOpen size={16} /> Read
@@ -99,7 +93,7 @@ export default function Navbar() {
                   </MobileLink>
                   <button
                      onClick={handleLogout}
-                     className="flex items-center gap-3 text-[#9AABA3] bg-[none] border-0 border-t border-[#E8EDE9] mt-1 pt-4 cursor-pointer"
+                     className="flex items-center gap-3 text-[#9AABA3] bg-[none] border-0 mt-1 pt-4 cursor-pointer"
                   >
                      <LogOut size={16} /> Sign Out
                   </button>

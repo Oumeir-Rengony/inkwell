@@ -3,7 +3,6 @@ import { v } from "convex/values";
 import slugify from "slugify";
 import { prosemirrorSync } from "./prosemirror";
 import { components } from "./_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
 
 /**
  * Get the current user or throw. Used in mutations that require auth.
@@ -73,9 +72,12 @@ export const remove = mutation({
 export const updateContent = mutation({
    args: {
       articleId: v.id("articles"),
-      title: v.string(),
-      slug: v.string(),
-      content: v.string(),
+      title: v.optional(v.string()),
+      slug:  v.optional(v.string()),
+      content: v.optional(v.string()),
+      coverImage: v.optional(v.string()),
+      description: v.optional(v.string()),
+      tags: v.optional(v.array(v.string()))
    },
    handler: async (ctx: MutationCtx, args) => {
 
@@ -83,10 +85,15 @@ export const updateContent = mutation({
 
       if (!user) throw new Error("UnAuthorized");
 
+
       await ctx.db.patch(args.articleId, {
-         content: args.content,
-         title: args.title,
-         slug: args.slug,
+         //loose inequality so catches undefined also
+         ...(args.title != null &&  { title: args.title, slug: slugify(args.title || "", {lower: true, strict: true}) }),
+         ...(args.content != null && { content: args.content }),
+         // ...(args.slug != null && { slug: args.slug }),
+         ...(args.coverImage != null && { coverImage: args.coverImage }),
+         ...(args.description != null && { description: args.description }),
+         ...(args.tags != null && { tags: args.tags }),
          updatedAt: Date.now(),
       });
    },
@@ -95,8 +102,9 @@ export const updateContent = mutation({
 export const togglePublish = mutation({
   args: {
    articleId: v.id("articles"),
+   content: v.string()
   },
-  handler: async (ctx: MutationCtx, { articleId }) => {
+  handler: async (ctx: MutationCtx, { articleId, content}) => {
 
     const user = await requireUser(ctx);
     const article = await ctx.db.get(articleId);
@@ -107,10 +115,20 @@ export const togglePublish = mutation({
       throw new Error("Unauthorized");
     }
 
-    const isPublished = article.status === "published";
+    const isPublished = article?.status === "published";
+
+    //currently draft, user clicked on publish
+    if(!isPublished){
+      // Delete prosemirror snapshots and steps
+      // await ctx.runMutation(components.prosemirrorSync.lib.deleteDocument, {
+      //    id: articleId,
+      // });
+
+    }
 
     await ctx.db.patch(articleId, {
       status: isPublished ? "draft" : "published",
+      content: isPublished ? "" : content,
       publishedAt: isPublished ? undefined : Date.now(),
       updatedAt: Date.now(),
     });
@@ -139,7 +157,6 @@ export const getArticleById = query({
    handler: async (ctx: QueryCtx, { id }) => {
 
       const article = await ctx.db.get(id);
-      console.log(article, id)
 
       if (!article) return null;
 

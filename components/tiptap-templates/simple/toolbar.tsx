@@ -75,14 +75,14 @@ const MainToolbarContent = ({
          {/* <Spacer /> */}
 
          <ToolbarGroup>
-            <UndoRedoButton action="undo" />
+            <UndoRedoButton action="undo"/>
             <UndoRedoButton action="redo" />
          </ToolbarGroup>
 
          <ToolbarSeparator />
 
          <ToolbarGroup>
-            <HeadingDropdownMenu levels={[1, 2, 3, 4]} portal={isMobile} />
+            <HeadingDropdownMenu levels={[2, 3, 4]} portal={isMobile} />
             <ListDropdownMenu
                types={["bulletList", "orderedList", "taskList"]}
                portal={isMobile}
@@ -194,25 +194,21 @@ export function EditorToolbar({
    return (
       <Toolbar
          ref={toolbarRef}
-         variant="floating"
+         variant="fixed"
          style={{
-            // ...(isMobile
-            //    ? {
-            //       bottom: `calc(100% - ${height - rect.y}px)`,
-            //    }
-            //    : {}),
+            ...(isMobile
+               ? {
+                  bottom: `calc(100% - ${height - rect.y}px)`,
+                  width: '85%'
+               }
+               : {top: '60px'}),
             boxShadow: 'rgba(0, 0, 0, 0.06) 0px 1px 6px',
             border: '1px solid rgb(232, 237, 233)'
          }}
          className={cn("w-full flex flex-wrap bg-white rounded-[10px]", className)}
       >
-         <MainToolbarContent
-            onHighlighterClick={() => setMobileView("highlighter")}
-            onLinkClick={() => setMobileView("link")}
-            isMobile={isMobile}
-         />
 
-         {/* {mobileView === "main" ? (
+         {mobileView === "main" ? (
             <MainToolbarContent
                onHighlighterClick={() => setMobileView("highlighter")}
                onLinkClick={() => setMobileView("link")}
@@ -223,7 +219,7 @@ export function EditorToolbar({
                type={mobileView === "highlighter" ? "highlighter" : "link"}
                onBack={() => setMobileView("main")}
             />
-         )} */}
+         )}
       </Toolbar>
    )
 }

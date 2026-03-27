@@ -22,11 +22,9 @@ export default defineSchema({
       ),
 
       content: v.string(),
-      tags:  v.optional(v.array(v.string())),
-      excerpt: v.optional(v.string()),
+      tags: v.optional(v.array(v.string())),
+      description: v.optional(v.string()),
       coverImage: v.optional(v.string()),
-
-      seoDescription: v.optional(v.string()),
 
       updatedAt: v.number(),
       publishedAt: v.optional(v.number()),
