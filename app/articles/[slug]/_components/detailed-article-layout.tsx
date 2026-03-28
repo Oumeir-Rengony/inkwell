@@ -45,7 +45,7 @@ export default function DetailedArticleLayout({
           {article?.tags?.map((tag: string) => (
             <span
               key={tag}
-              className="text-xs font-bold uppercase tracking-[0.08em] text-[#4A7A56] bg-[#E8EDE9] py-1 px-2.5 rounded-fulll"
+              className="text-xs font-bold uppercase tracking-[0.08em] text-[#4A7A56] bg-[#E8EDE9] py-1 px-2.5 rounded-full"
             >
               {tag}
             </span>

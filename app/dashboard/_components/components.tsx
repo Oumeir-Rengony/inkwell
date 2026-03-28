@@ -12,22 +12,20 @@ import {
   Plus,
   GlobeOff,
   Delete,
-  ExternalLink,
 } from "lucide-react";
 import { api } from "@/convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
+import Navbar from "@/components/ui/navbar";
 import { cn, wait } from "@/lib/utilities";
 import { Id } from "@/convex/_generated/dataModel";
 import DialogModal from "@/components/ui/dialog-modal";
 import { AlertDialog, AlertDialogTrigger } from "@/components/shadcn-ui/alert-dialog";
 
-
 type Filter = "all" | "draft" | "published";
 
 const tabs: Filter[] = ["all", "draft", "published"];
 
-
-export default function DashboardPage() {
+export default function DashboardLayout() {
   const [filter, setFilter] = useState<Filter>("all");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   
@@ -340,18 +338,11 @@ function ArticleRow({
             >
               <Edit3 size={13} />
             </ActionButton>
-              
-            <ActionButton
-              onClick={() => window.open(`/articles/${article?.slug}`, "_blank")}
-              title="view live article"
-              disabled={!isPublished || actionLoading}
-            >
-              <ExternalLink size={13}/>
-            </ActionButton>
 
             <AlertDialog open={publishModal} onOpenChange={setPublishModal}>
               <AlertDialogTrigger disabled={actionLoading} asChild>
                 <ActionButton
+                  onClick={isPublished ? handleUnPublish : handlePublish}
                   title={isPublished ? "Unpublish" : "Publish"}
                   disabled={actionLoading}
                 >
@@ -365,12 +356,11 @@ function ArticleRow({
               <DialogModal
                 title={isPublished ? "Revert Article to Draft?" : "Publish Article"}
                 description={isPublished ? "This is a live article. Users will no longer see this article" : "Do you want to proceed ?"}
-                label={{ 
-                  yes: isPublished ? "Continue" : "Publish",
+                label={{
+                  yes: "Delete",
                   no: "Cancel"
                 }}
-                variants={{yes: "secondary" }}
-                onAcceptAction={isPublished ? handleUnPublish : handlePublish}
+                onAcceptAction={onDelete}
                 onCloseAction={() => setPublishModal(false)}
               />
             </AlertDialog>
@@ -388,12 +378,11 @@ function ArticleRow({
               </AlertDialogTrigger>
               <DialogModal
                 title="Delete Article?"
-                description={isPublished ? "You are about to delete a published article. Users will no longer see this article" :"This action cannot be undone. This article will be permanently deleted"}
+                description="This action cannot be undone. This article will be permanently deleted"
                 label={{
                   yes: "Delete",
                   no: "Cancel"
                 }}
-                variants={{yes: "destructive"}}
                 onAcceptAction={onDelete}
                 onCloseAction={() => setDeleteModal(false)}
               />
@@ -446,9 +435,8 @@ function ActionButton({
       title={title}
       disabled={disabled}
       className={cn(
-        "inline-flex items-center justify-center w-8 h-8 rounded-md border border-[#E8EDE9] text-[#3A524B] bg-white shrink-0 cursor-pointer hover:bg-[#1e3530] hover:text-white",
-        danger ? "hover:bg-destructive text-red-600" : "",
-        disabled ? "bg-gray-100 opacity-80 cursor-default hover:bg-gray-100 hover:text-[#3A524B]" : ""
+        "inline-flex items-center justify-center w-8 h-8 rounded-md border border-[#E8EDE9] bg-white shrink-0 cursor-pointer hover:bg-[#f6f6f6]",
+        danger ? "text-red-600" : "text-[#3A524B]"
       )}
     >
       {children}

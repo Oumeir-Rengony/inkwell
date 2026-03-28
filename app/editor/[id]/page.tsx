@@ -77,7 +77,9 @@ export function Layout({
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const sync = useTiptapSync(api.prosemirror, id);
   const updateArticle = useMutation(api.articles.updateContent);
-  const togglePublish = useMutation(api.articles.togglePublish);
+  const publishArticle = useMutation(api.articles.publishArticle);
+  const unPublishArticle = useMutation(api.articles.unPublishArticle);
+
 
 
   const editor = useEditor({
@@ -121,9 +123,21 @@ export function Layout({
     content: sync.initialContent || undefined
   }, [sync.initialContent, sync.extension])
 
-  async function handleTogglePublish() {
+  async function handleUnPublish() {
     try {
-      await togglePublish({ 
+      await unPublishArticle({ 
+        articleId: id,
+        content: editor?.getHTML() || ""
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handlePublish(){
+
+    try {
+      await publishArticle({ 
         articleId: id,
         content: editor?.getHTML() || ""
       });
@@ -202,9 +216,8 @@ export function Layout({
           <MetadataInput
             article={article}
             handleMetadataChange={handleMetadataChange}
-            // onPublish={handleTogglePublish}
-            // onUnpublish={handleTogglePublish}
-            handleTogglePublish={handleTogglePublish}
+            onPublish={handlePublish}
+            onUnpublish={handleUnPublish}
             onDelete={handleDelete}
             saveStatus="idle"
           />

@@ -99,7 +99,7 @@ export const updateContent = mutation({
    },
 });
 
-export const togglePublish = mutation({
+export const publishArticle = mutation({
   args: {
    articleId: v.id("articles"),
    content: v.string()
@@ -117,19 +117,43 @@ export const togglePublish = mutation({
 
     const isPublished = article?.status === "published";
 
-    //currently draft, user clicked on publish
-    if(!isPublished){
-      // Delete prosemirror snapshots and steps
-      // await ctx.runMutation(components.prosemirrorSync.lib.deleteDocument, {
-      //    id: articleId,
-      // });
-
-    }
+    //do not re-publish article
+    if(isPublished) return;
 
     await ctx.db.patch(articleId, {
-      status: isPublished ? "draft" : "published",
-      content: isPublished ? "" : content,
+      status: "published",
+      content: content,
       publishedAt: isPublished ? undefined : Date.now(),
+      updatedAt: Date.now(),
+    });
+  },
+});
+
+//make article draft
+export const unPublishArticle = mutation({
+  args: {
+   articleId: v.id("articles"),
+   content: v.string()
+  },
+  handler: async (ctx: MutationCtx, { articleId, content}) => {
+
+    const user = await requireUser(ctx);
+    const article = await ctx.db.get(articleId);
+
+    if (!article) throw new Error("Article not found");
+
+    if (!user) {
+      throw new Error("Unauthorized");
+    }
+
+    const isPublished = article?.status === "published";
+
+    //if article already unpublish return
+    if(!isPublished) return
+
+    await ctx.db.patch(articleId, {
+      status: "draft",
+      publishedAt: undefined,
       updatedAt: Date.now(),
     });
   },
@@ -168,4 +192,14 @@ export const getAllArticles = query({
    handler: async (ctx) => {
       return await ctx.db.query("articles").collect();
    },
+});
+
+export const getPublishedArticles = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("articles")
+      .filter((q) => q.eq(q.field("status"), "published"))
+      .collect();
+  },
 });

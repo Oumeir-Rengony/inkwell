@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 
 import Layout from "@/components/ui/layout";
 import DetailedArticleLayout from "./_components/detailed-article-layout";
+import { notFound } from "next/navigation";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -38,6 +39,10 @@ function formatDate(iso: string | number) {
 
 export default async function ArticlePage({ params }: PageProps) {
    const { slug } = await params;
+   
+   if(!slug){
+      notFound();
+   }
 
    return (
       <Layout className="max-w-180 py-0">

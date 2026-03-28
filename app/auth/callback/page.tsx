@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { api } from "@/convex/_generated/api";
 
 export default async function CallbackPage() {
+
    const { userId } = await auth();
 
    if (!userId) {
@@ -13,7 +14,7 @@ export default async function CallbackPage() {
    const user = await currentUser();
 
    if (!user) {
-      redirect("/");
+      redirect("/sign-in");
    }
 
    const convexUserId = await fetchMutation(api.users.upsertUser, {
@@ -22,6 +23,8 @@ export default async function CallbackPage() {
       name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || undefined,
       avatarUrl: user.imageUrl || undefined,
    });
+
+   console.log(convexUserId)
 
 
    redirect("/dashboard");

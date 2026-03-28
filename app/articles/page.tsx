@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link";
-// import Navbar from "@/components/ui/Navbar";
 import { BookOpen } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -16,7 +15,7 @@ function formatDate(iso: string | number) {
 }
 
 export default function ArticlesFeed() {
-   const articles = useQuery(api.articles.getAllArticles);
+   const articles = useQuery(api.articles.getPublishedArticles);
 
    if (!articles) {
       return (
