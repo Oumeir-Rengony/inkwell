@@ -181,7 +181,7 @@ export function EditorToolbar({
    )
    const toolbarRef = useRef<HTMLDivElement>(null);
 
-   const rect = useCursorVisibility(toolbarRef.current?.getBoundingClientRect().height ?? 0)
+   const rect = useCursorVisibility()
 
 
    useEffect(() => {
