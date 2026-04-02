@@ -59,7 +59,7 @@ export default function Navbar({
                      </Link>
                   }
 
-                   {
+                  {
                      (!isLoading && isAuthenticated) &&
                      <button onClick={handleLogout} className="flex items-center gap-1.5 text-sm text-[#3A524B] no-underline cursor-pointer">
                         <LogOut size={15} /> Sign Out
@@ -68,6 +68,7 @@ export default function Navbar({
                         
                </nav>
 
+ 
                <button
                   onClick={() => setMenuOpen((o) => !o)}
                   aria-label="Toggle menu"
@@ -75,6 +76,8 @@ export default function Navbar({
                >
                   {menuOpen ? <X size={22} /> : <Menu size={22} />}
                </button>
+               
+
             </div>
          </div>
 
@@ -82,13 +85,13 @@ export default function Navbar({
          {menuOpen && (
             <div className="max-w-7xl my-0 mx-auto px-10 py-4 md:hidden bg-white border-t border-[#E8EDE9] " style={{ boxShadow: '0 2px 4px 0 rgba(0,0,0,.1)'}}>
                <div className="flex flex-col">
-                  {(!isLoading && !isAuthenticated) &&
 
+                   <MobileLink href="/articles">
+                     <BookOpen size={16} /> articles
+                  </MobileLink>
+
+                  {(!isLoading && isAuthenticated) &&
                      <>
-                        <MobileLink href="/articles">
-                           <BookOpen size={16} /> Read
-                        </MobileLink>
-
                         <MobileLink href="/dashboard">
                            <LayoutDashboard size={16} /> Dashboard
                         </MobileLink>
@@ -104,7 +107,6 @@ export default function Navbar({
                            <LogOut size={16} /> Sign Out
                         </button>
                      </>
-
                   }
 
                </div>

@@ -169,7 +169,9 @@ export const getArticleBySlug = query({
          .withIndex("by_slug", q => q.eq("slug", slug))
          .unique();
 
-      if (!article || article.status !== "published") return null;
+      if (!article || article.status !== "published"){
+         return null
+      }
 
       return article;
    },
