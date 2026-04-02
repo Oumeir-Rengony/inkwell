@@ -29,7 +29,6 @@
 
 
 import Link from "next/link";
-import Navbar from "@/components/ui/navbar";
 import {
   PenLine,
   BookOpen,

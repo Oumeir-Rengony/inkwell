@@ -8,24 +8,28 @@ export default async function CallbackPage() {
    const { userId } = await auth();
 
    if (!userId) {
-      redirect("/sign-in");
+      redirect("/");
    }
 
    const user = await currentUser();
 
    if (!user) {
-      redirect("/sign-in");
+      redirect("/");
    }
 
-   const convexUserId = await fetchMutation(api.users.upsertUser, {
-      clerkId: user.id,
-      email: user.emailAddresses[0]?.emailAddress ?? "",
-      name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || undefined,
-      avatarUrl: user.imageUrl || undefined,
-   });
+   try {
+      const convexUserId = await fetchMutation(api.users.upsertUser, {
+         clerkId: user.id,
+         email: user.emailAddresses[0]?.emailAddress ?? "",
+         name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || undefined,
+         avatarUrl: user.imageUrl || undefined,
+      });
+         console.log(convexUserId)
 
-   console.log(convexUserId)
-
+   }catch(e){
+      console.error("Error upserting user in Convex:", e);
+      redirect("/");
+   }
 
    redirect("/dashboard");
 }

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-import Layout from "@/components/ui/layout";
+import Layout from "@/components/ui/app-shell";
 import DetailedArticleLayout from "./_components/detailed-article-layout";
 import { notFound } from "next/navigation";
 
