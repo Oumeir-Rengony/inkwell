@@ -38,5 +38,18 @@ export const {
 
     if (!user) throw new Error("Not authorized to edit this article");
     
-  }
+  },
+
+  async onSnapshot(ctx, id, snapshot, version) {
+
+    await ctx.runMutation(
+      components.prosemirrorSync.lib.deleteSteps,{
+        id: id,
+        beforeTs: Date.now(),
+      }
+    );
+    
+  },
+
+  pruneSnapshots: true
 });
