@@ -50,8 +50,7 @@ export default async function ArticlePage({ params }: PageProps) {
    })
 
    return (
-      <Layout className="max-w-180 py-0">
-         {/* <DetailedArticleLayout slug={slug} /> */}
+      <div className="mx-auto max-w-180 py-0">
          <main>
 
             {/* Back */}
@@ -109,6 +108,6 @@ export default async function ArticlePage({ params }: PageProps) {
 
             {/* <RelatedArticles related={related} /> */}
          </main>
-      </Layout>
+      </div>
    )
 }

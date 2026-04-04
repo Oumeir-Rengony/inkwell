@@ -53,7 +53,8 @@ export default function Page({
   const { id } = use(params);
   const article = useQuery(api.articles.getArticleById, { id: id as Id<"articles"> });
 
-  if (!id) {
+
+  if (!id || article === null) {
     notFound();
   }
 
@@ -75,12 +76,12 @@ export function Layout({
 }) {
   
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const sync = useTiptapSync(api.prosemirror, id);
+  const sync = useTiptapSync(api.prosemirror, id, {
+    snapshotDebounceMs: 1000
+  });
   const updateArticle = useMutation(api.articles.updateContent);
   const publishArticle = useMutation(api.articles.publishArticle);
   const unPublishArticle = useMutation(api.articles.unPublishArticle);
-
-
 
   const editor = useEditor({
     immediatelyRender: false,
